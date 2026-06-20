@@ -12,12 +12,39 @@ results to a React dashboard:
 | Fertilizer recommender | `fert_model.pkl` | RandomForest (scikit-learn) | Best fertilizer for readings + soil + crop (7 fertilizers) |
 | Anomaly monitor | `sensor_corridors.pkl` | per-crop percentile corridors | WARNING/CRITICAL alerts + actions |
 
+📐 **Full wiring + system architecture:** see [ARCHITECTURE.md](ARCHITECTURE.md).
+
+## Dataset & Models
+
+**Tabular data — `_artifacts/soil_and_data/data.csv`** (8 000 rows). Columns:
+`Temparature, Humidity, Moisture, Soil Type, Crop Type, Nitrogen, Potassium,
+Phosphorous, Fertilizer Name`. It is a crop-and-fertilizer recommendation
+dataset:
+
+- **Soil types (5):** Sandy, Loamy, Black, Red, Clayey
+- **Crops (11):** Maize, Sugarcane, Cotton, Tobacco, Paddy, Barley, Wheat,
+  Millets, Oil seeds, Pulses, Ground Nuts
+- **Fertilizers (7):** Urea, DAP, 14-35-14, 28-28, 17-17-17, 20-20, 10-26-26
+
+Two `RandomForestClassifier` models (200 trees) are trained from it — one for
+crop, one for fertilizer — with the training scripts kept in
+`_artifacts/soil_and_data/` (`1_crop_recommender.py`, `2_fertilizer_recommender.py`,
+`3_sensor_monitor.py`). The per-crop "normal corridors" used for anomaly alerts
+are percentile bands (10th–90th) computed from the same data.
+
+**Soil-image model — `best_model.pth`**: an EfficientNet-B0 fine-tuned to
+classify a soil photo into 4 visual classes (Alluvial / Black / Clay / Red soil),
+reported validation accuracy 1.0. Standard ImageNet preprocessing (resize 256 →
+center-crop 224 → normalize).
+
+> Dataset and pretrained-model source links are listed in the project slides.
+> _(Add the exact dataset URLs from the presentation here.)_
+
 > **Note on the spec.** This project was built around the *actual* trained
-> artifacts that were provided, which differ from the original TZ (the TZ assumed
-> an MLP soil-status classifier over pH/light sensors). The architecture
+> artifacts that were provided, which differ from the original TZ (an MLP
+> soil-status classifier over pH/light sensors). The architecture
 > (FastAPI + PostgreSQL/SQLite + React + ESP32) follows the TZ; the ML layer,
-> sensor schema, and dashboard were adapted to the real models. See
-> `_artifacts/` for the original training scripts and `data.csv`.
+> sensor schema, and dashboard were adapted to the real models.
 
 ```
 ESP32 (NPK / moisture / DHT22)
@@ -82,11 +109,16 @@ The model files must be present in `backend/app/ml/weights/`:
 `best_model.pth`, `crop_model.pkl`, `fert_model.pkl`, `sensor_corridors.pkl`,
 and the `*_le_*.pkl` label encoders.
 
-> **Two files are not tracked in git** because they exceed GitHub's 100 MB limit:
-> `crop_model.pkl` (~183 MB) and `fert_model.pkl` (~132 MB). Obtain them
-> separately (shared archive / release asset) and drop them into
-> `backend/app/ml/weights/`. Everything else, including the EfficientNet
-> `best_model.pth`, is in the repo. The backend will fail to start without them.
+> **Reassemble the two large models after cloning.** `crop_model.pkl` (~183 MB)
+> and `fert_model.pkl` (~132 MB) exceed GitHub's 100 MB per-file limit, so they
+> are committed split into `<name>.pkl.part-*` chunks. Rebuild them with:
+>
+> ```bash
+> bash backend/app/ml/weights/assemble_models.sh
+> ```
+>
+> Everything else (incl. the EfficientNet `best_model.pth`) is ready to use. The
+> backend will not start until the two `.pkl` files are reassembled.
 
 ### PostgreSQL instead of SQLite (optional)
 
