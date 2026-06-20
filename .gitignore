@@ -1,0 +1,31 @@
+# AI assistant session data
+.claude/
+
+# Python
+**/venv/
+**/.venv/
+**/.venv-*/
+**/__pycache__/
+*.pyc
+**/.env
+
+# Node / frontend
+**/node_modules/
+frontend/dist/
+*.tsbuildinfo
+
+# OS / editor / logs
+.DS_Store
+*.log
+
+# Large raw training-artifact duplicates — the models used at runtime are kept
+# under backend/app/ml/weights/. Keep the reference scripts + data.csv only.
+_artifacts/**/*.pkl
+_artifacts/**/*.pth
+_artifacts/**/*.zip
+
+# Two RandomForest models exceed GitHub's 100MB limit and the account's LFS
+# budget — keep them out of the repo. Obtain them separately and place in
+# backend/app/ml/weights/ (see README "Model files").
+backend/app/ml/weights/crop_model.pkl
+backend/app/ml/weights/fert_model.pkl
