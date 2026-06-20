@@ -16,29 +16,58 @@ results to a React dashboard:
 
 ## Dataset & Models
 
-**Tabular data — `_artifacts/soil_and_data/data.csv`** (8 000 rows). Columns:
-`Temparature, Humidity, Moisture, Soil Type, Crop Type, Nitrogen, Potassium,
-Phosphorous, Fertilizer Name`. It is a crop-and-fertilizer recommendation
-dataset:
+The system uses two model groups.
 
+### Model 1 — soil type from a photo (`best_model.pth`)
+
+An image classifier that labels a soil photo. Three ImageNet-pretrained
+backbones were benchmarked via transfer learning:
+
+- **ResNet18** — strong baseline, fast training
+- **MobileNetV3 (small)** — lightweight, edge-friendly
+- **EfficientNet-B0** — best accuracy-to-size ratio → shipped as `best_model.pth`
+
+All fine-tuned for **15 epochs (5 initial + 10 extended)** on a 4-class soil
+dataset. Preprocessing: resize 256 → center-crop 224 → ImageNet normalize.
+
+**Image dataset:**
+- Train/Validation: **1,555 images across 4 classes** — Alluvial (523),
+  Black (228), Clay (197), Red (267)
+- Test: ~500 images per class; balanced augmentation to offset class imbalance
+- Source: Kaggle — [Soil Types Dataset](https://www.kaggle.com/datasets/jhislainematchouath/soil-types-dataset/data)
+
+### Model 2 — crop & fertilizer recommenders (`crop_model.pkl`, `fert_model.pkl`)
+
+Two `RandomForestClassifier` models (200 trees) trained on tabular soil/crop
+data — `_artifacts/soil_and_data/data.csv` (**9 columns × 8,000 rows**, includes
+soil type). Training scripts: `1_crop_recommender.py`,
+`2_fertilizer_recommender.py`, `3_sensor_monitor.py`.
+
+- Features: Nitrogen, Potassium, Phosphorous, Temperature, Humidity, Moisture,
+  Soil Type (+ Crop for the fertilizer model)
 - **Soil types (5):** Sandy, Loamy, Black, Red, Clayey
 - **Crops (11):** Maize, Sugarcane, Cotton, Tobacco, Paddy, Barley, Wheat,
   Millets, Oil seeds, Pulses, Ground Nuts
 - **Fertilizers (7):** Urea, DAP, 14-35-14, 28-28, 17-17-17, 20-20, 10-26-26
+- Per-crop "normal corridors" (10th–90th percentile bands) drive the anomaly alerts.
 
-Two `RandomForestClassifier` models (200 trees) are trained from it — one for
-crop, one for fertilizer — with the training scripts kept in
-`_artifacts/soil_and_data/` (`1_crop_recommender.py`, `2_fertilizer_recommender.py`,
-`3_sensor_monitor.py`). The per-crop "normal corridors" used for anomaly alerts
-are percentile bands (10th–90th) computed from the same data.
+A second soil-chemistry table (17 columns × 782 rows: Sand/Clay/Silt %, pH, EC,
+O.M., CaCO3, N/P/K/Mg/Fe/Zn/Mn/Cu/B ppm) was also explored.
 
-**Soil-image model — `best_model.pth`**: an EfficientNet-B0 fine-tuned to
-classify a soil photo into 4 visual classes (Alluvial / Black / Clay / Red soil),
-reported validation accuracy 1.0. Standard ImageNet preprocessing (resize 256 →
-center-crop 224 → normalize).
+**Tabular datasets:**
+- [Crop and Soil Dataset (Kaggle)](https://www.kaggle.com/datasets/shankarpriya2913/crop-and-soil-dataset) — crop/fertilizer, 8,000 rows
+- [Soil Data — Grevena (Kaggle)](https://www.kaggle.com/datasets/jocelyndumlao/soil-data-grevena/data) — soil chemistry, 782 rows
 
-> Dataset and pretrained-model source links are listed in the project slides.
-> _(Add the exact dataset URLs from the presentation here.)_
+### Evaluation
+
+Models are evaluated on **Precision, Recall, F1-score, and Accuracy**.
+
+### Sources & references
+
+- Pretrained backbones — [Keras Applications](https://keras.io/api/applications/)
+- [Soil health & food security — NCBI Bookshelf NBK609368](https://www.ncbi.nlm.nih.gov/books/NBK609368/)
+- [ScienceDirect — S2667006225000309](https://www.sciencedirect.com/science/article/pii/S2667006225000309)
+- [Computer Systems Science & Engineering 46(1) — TechScience](https://www.techscience.com/csse/v46n1/51330)
 
 > **Note on the spec.** This project was built around the *actual* trained
 > artifacts that were provided, which differ from the original TZ (an MLP
