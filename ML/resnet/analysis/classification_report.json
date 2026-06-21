@@ -1,0 +1,39 @@
+{
+  "Alluvial soil": {
+    "precision": 1.0,
+    "recall": 0.9811320754716981,
+    "f1-score": 0.9904761904761905,
+    "support": 53.0
+  },
+  "Black Soil": {
+    "precision": 0.9914529914529915,
+    "recall": 1.0,
+    "f1-score": 0.9957081545064378,
+    "support": 116.0
+  },
+  "Clay soil": {
+    "precision": 1.0,
+    "recall": 0.9692307692307692,
+    "f1-score": 0.984375,
+    "support": 65.0
+  },
+  "Red soil": {
+    "precision": 0.9814814814814815,
+    "recall": 1.0,
+    "f1-score": 0.9906542056074766,
+    "support": 106.0
+  },
+  "accuracy": 0.9911764705882353,
+  "macro avg": {
+    "precision": 0.9932336182336182,
+    "recall": 0.9875907111756168,
+    "f1-score": 0.9903033876475262,
+    "support": 340.0
+  },
+  "weighted avg": {
+    "precision": 0.9913105413105414,
+    "recall": 0.9911764705882353,
+    "f1-score": 0.9911503082716981,
+    "support": 340.0
+  }
+}
