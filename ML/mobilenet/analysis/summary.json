@@ -1,0 +1,83 @@
+{
+  "model": "mobilenet_v3_small",
+  "checkpoint": "outputs/mobilenet_v3_small/best_model.pth",
+  "accuracy": 0.9706,
+  "macro_precision": 0.9718,
+  "macro_recall": 0.9604,
+  "macro_f1": 0.9654,
+  "weighted_precision": 0.9711,
+  "weighted_recall": 0.9706,
+  "weighted_f1": 0.9704,
+  "support": 340,
+  "best_val_accuracy_from_checkpoint": 0.9706,
+  "per_class": [
+    {
+      "class_name": "Alluvial soil",
+      "precision": 1.0,
+      "recall": 0.9057,
+      "f1_score": 0.9505,
+      "support": 53
+    },
+    {
+      "class_name": "Black Soil",
+      "precision": 0.9664,
+      "recall": 0.9914,
+      "f1_score": 0.9787,
+      "support": 116
+    },
+    {
+      "class_name": "Clay soil",
+      "precision": 0.9394,
+      "recall": 0.9538,
+      "f1_score": 0.9466,
+      "support": 65
+    },
+    {
+      "class_name": "Red soil",
+      "precision": 0.9813,
+      "recall": 0.9906,
+      "f1_score": 0.9859,
+      "support": 106
+    }
+  ],
+  "top_confusions": [
+    {
+      "true_class": "Alluvial soil",
+      "predicted_class": "Clay soil",
+      "count": 4
+    },
+    {
+      "true_class": "Clay soil",
+      "predicted_class": "Black Soil",
+      "count": 2
+    },
+    {
+      "true_class": "Alluvial soil",
+      "predicted_class": "Black Soil",
+      "count": 1
+    },
+    {
+      "true_class": "Black Soil",
+      "predicted_class": "Red soil",
+      "count": 1
+    },
+    {
+      "true_class": "Clay soil",
+      "predicted_class": "Red soil",
+      "count": 1
+    },
+    {
+      "true_class": "Red soil",
+      "predicted_class": "Black Soil",
+      "count": 1
+    }
+  ],
+  "artifacts": {
+    "confusion_matrix": "outputs/mobilenet_v3_small/analysis/confusion_matrix.png",
+    "training_curves": "outputs/mobilenet_v3_small/analysis/training_curves.png",
+    "per_class_metrics": "outputs/mobilenet_v3_small/analysis/per_class_metrics.png",
+    "confidence_distribution": "outputs/mobilenet_v3_small/analysis/confidence_distribution.png",
+    "correct_predictions": "outputs/mobilenet_v3_small/analysis/correct_predictions.png",
+    "misclassifications": "outputs/mobilenet_v3_small/analysis/misclassifications.png"
+  }
+}
