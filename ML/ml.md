@@ -1,0 +1,1 @@
+This subdirectory contains the codebase for the Machine Learning component of the Soil Care System. The pipeline ingests real-time hardware sensor data (soil moisture, temperature, pH, and NPK levels) to classify soil types and predict optimal soil health conditions.
