@@ -1,0 +1,33 @@
+{
+  "train_dir": "Dataset/Train",
+  "val_dir": "Dataset/test",
+  "num_train_images": 1215,
+  "num_val_images": 340,
+  "classes": [
+    "Alluvial soil",
+    "Black Soil",
+    "Clay soil",
+    "Red soil"
+  ],
+  "device": "mps",
+  "results": [
+    {
+      "model": "resnet18",
+      "best_val_accuracy": 0.9912,
+      "checkpoint": "outputs/resnet18/best_model.pth",
+      "history_file": "outputs/resnet18/history.json"
+    },
+    {
+      "model": "mobilenet_v3_small",
+      "best_val_accuracy": 0.9706,
+      "checkpoint": "outputs/mobilenet_v3_small/best_model.pth",
+      "history_file": "outputs/mobilenet_v3_small/history.json"
+    },
+    {
+      "model": "efficientnet_b0",
+      "best_val_accuracy": 0.9912,
+      "checkpoint": "outputs/efficientnet_b0/best_model.pth",
+      "history_file": "outputs/efficientnet_b0/history.json"
+    }
+  ]
+}
